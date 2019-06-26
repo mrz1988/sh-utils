@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#
 # ANSI colors
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
@@ -29,41 +30,53 @@ then
 fi
 
 
-ADDED_FILES="$(git status --porcelain | grep "^[A]")"
-if [ -n "$ADDED_FILES" ]
+STAGED_FILES="$(git status --porcelain | grep "^[MADRC]")"
+if [ -n "$STAGED_FILES" ]
 then
-  echo added files
+  echo "> ${YELLOW}Branch has staged changes, making temp commit...${NC}"
+  git commit -m "@@WIP-STAGED" > /dev/null
 else
-  echo no added files
+  echo "> No staged changes :)"
 fi
-
-if [ -n $(git diff-index --quiet HEAD --) ]
-then
-  echo staged changes
-else
-  echo no staged changes
-fi
-exit 0
-
 
 CHANGES=$(git status --porcelain) &> /dev/null
 if [ -n "$CHANGES" ];
 then
   echo "> ${YELLOW}Branch dirty, making temp commit...${NC}"
   git add -A > /dev/null
-  git commit -m "@@WIP" > /dev/null
+  git commit -m "@@WIP-WORKSPACE" > /dev/null
 else
   echo "> ${GREEN}Workspace clean!${NC}"
 fi
 
-echo "> ${GREEN}Checking out branch ${1}...${NC}"
+echo "> Checking out branch ${1}..."
 git checkout $1 > /dev/null
-if git log --pretty=oneline --max-count 1 | grep --quiet @@WIP;
+if git log --pretty=oneline --max-count 1 | grep --quiet @@WIP-WORKSPACE;
 then
   echo "> ${YELLOW}Found dirty WIP changes, uncommitting...${NC}"
   git reset HEAD~ > /dev/null
 else
-  echo "> ${GREEN}Commit history clean, no WIP.${NC}"
+  echo "> No WIP Workspace changes."
+fi
+
+if git log --pretty=oneline --max-count 1 | grep --quiet @@WIP-STAGED;
+then
+  echo "> ${YELLOW}Found formerly staged changes.${NC}"
+  WORKSPACE=$(git status --porcelain)
+  if [ -n "$WORKSPACE" ]
+  then
+    echo "> Stashing your workspace..."
+    git stash > /dev/null
+    echo "> Unboxing your staging area..."
+    git reset HEAD~ > /dev/null
+    git add -A > /dev/null
+    echo "> Rebuilding your workspace...
+    git stash pop
+  else
+    echo "> Workspace is clean, so just re-staging those."
+    git reset HEAD~ > /dev/null
+    git add -A > /dev/null
+  fi
 fi
 
 echo "> ${GREEN}All set!${NC}"
