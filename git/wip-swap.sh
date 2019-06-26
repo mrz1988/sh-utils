@@ -17,7 +17,7 @@ fi
 REBASE_MERGE_DIR="$(git rev-parse --git-path rebase-merge)"
 REBASE_APPLY_DIR="$(git rev-parse --git-path rebase-apply)"
 
-if [ \( -d "$REBASE_RESULT_DIR" \) -o \( -d "$REBASE_APPLY_DIR" \) ]
+if [ -d "$REBASE_MERGE_DIR" ] || [ -d "$REBASE_APPLY_DIR" ]
 then
   echo $REBASE_RESULT_DIR
   echo "> ${RED}Rebase in progress. Finish before changing branches.${NC}"
