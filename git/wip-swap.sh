@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-git merge HEAD &> /dev/null
-MERGE_RESULT = $?
+MERGE_RESULT = $(git merge HEAD &> /dev/null)
+
 if [ $MERGE_RESULT -ne 0 ]
 then
   echo "> ${RED}Merge in progress. Finish before changing branches."
@@ -22,7 +22,7 @@ then
 fi
 
 
-CHANGES=$(git status --porcelain)
+CHANGES=$(git status --porcelain) &> /dev/null
 if [ -n "$CHANGES" ];
 then
   echo "> ${YELLOW}Branch dirty, making temp commit...${NC}"
