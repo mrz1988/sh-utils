@@ -5,19 +5,22 @@ YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-MERGE_RESULT=$(git merge HEAD &> /dev/null)
+git merge HEAD &> /dev/null
+MERGE_RESULT=$?
 
 if [ $MERGE_RESULT -ne 0 ]
 then
-  echo "> ${RED}Merge in progress. Finish before changing branches."
+  echo "> ${RED}Merge in progress. Finish before changing branches.${NC}"
   exit 1
 fi
 
-git rebase HEAD &> /dev/null
-REBASE_RESULT=$?
-if [ $REBASE_RESULT -ne 0 ]
+REBASE_MERGE_DIR="$(git rev-parse --git-path rebase-merge)"
+REBASE_APPLY_DIR="$(git rev-parse --git-path rebase-apply)"
+
+if [ \( -d "$REBASE_RESULT_DIR" \) -o \( -d "$REBASE_APPLY_DIR" \) ]
 then
-  echo "> ${RED}Rebase in progress. Finish before changing branches."
+  echo $REBASE_RESULT_DIR
+  echo "> ${RED}Rebase in progress. Finish before changing branches.${NC}"
   exit 1
 fi
 
