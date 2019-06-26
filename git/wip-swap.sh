@@ -70,7 +70,7 @@ then
     echo "> Unboxing your staging area..."
     git reset HEAD~ > /dev/null
     git add -A > /dev/null
-    echo "> Rebuilding your workspace...
+    echo "> Rebuilding your workspace..."
     git stash pop
   else
     echo "> Workspace is clean, so just re-staging those."
