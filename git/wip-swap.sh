@@ -5,7 +5,7 @@ YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-MERGE_RESULT = $(git merge HEAD &> /dev/null)
+MERGE_RESULT=$(git merge HEAD &> /dev/null)
 
 if [ $MERGE_RESULT -ne 0 ]
 then
@@ -14,7 +14,7 @@ then
 fi
 
 git rebase HEAD &> /dev/null
-REBASE_RESULT = $?
+REBASE_RESULT=$?
 if [ $REBASE_RESULT -ne 0 ]
 then
   echo "> ${RED}Rebase in progress. Finish before changing branches."
