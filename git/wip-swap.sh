@@ -1,10 +1,12 @@
 #!/bin/bash
 
+# ANSI colors
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
+# Check if an active merge is open, if so abort
 git merge HEAD &> /dev/null
 MERGE_RESULT=$?
 
@@ -14,6 +16,8 @@ then
   exit 1
 fi
 
+
+# Check if an active rebase is open, if so abort
 REBASE_MERGE_DIR="$(git rev-parse --git-path rebase-merge)"
 REBASE_APPLY_DIR="$(git rev-parse --git-path rebase-apply)"
 
@@ -23,6 +27,23 @@ then
   echo "> ${RED}Rebase in progress. Finish before changing branches.${NC}"
   exit 1
 fi
+
+
+ADDED_FILES="$(git status --porcelain | grep "^[A]")"
+if [ -n "$ADDED_FILES" ]
+then
+  echo added files
+else
+  echo no added files
+fi
+
+if [ -n $(git diff-index --quiet HEAD --) ]
+then
+  echo staged changes
+else
+  echo no staged changes
+fi
+exit 0
 
 
 CHANGES=$(git status --porcelain) &> /dev/null
