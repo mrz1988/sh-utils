@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#
 # ANSI colors
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
@@ -71,7 +70,7 @@ then
     git reset HEAD~ > /dev/null
     git add -A > /dev/null
     echo "> Rebuilding your workspace..."
-    git stash pop
+    git stash pop > /dev/null
   else
     echo "> Workspace is clean, so just re-staging those."
     git reset HEAD~ > /dev/null
