@@ -9,8 +9,10 @@ Some tools:
 
 /git:
   wip-swap.sh:
-    A tool that will recklessly auto-commit any unstaged changes, untracked files, etc to a commit marked @@WIP before swapping to another branch. If the landing branch happens to have a @@WIP commit, it will pop it off and leave all changes unstaged for you to figure out yourself. Takes a branch name as a parameter. If the branch doesn't exist this probably just breaks.
+    A tool that will recklessly auto-commit any uncommitted work before swapping to another branch. Attempts to preserve both your staging area and your unstaged workspace. If the landing branch happens to have @@WIP commits, it will pop them off, attempting to recover your previous workspace. Takes a branch name as a parameter. If the branch doesn't exist this probably just breaks.
 
     Future improvements:
     - Always check to see if the branch exists first
     - Give fuzzy branch suggestions in case the branch doesn't exist
+    - Use branches to help isolate commits
+    - Add more featureful commands
